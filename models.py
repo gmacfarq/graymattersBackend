@@ -22,7 +22,6 @@ class User(Base):
         return bcrypt.checkpw(password_bytes, hashed_password_bytes)
 
 
-
 class Book(Base):
     __tablename__ = "books"
 

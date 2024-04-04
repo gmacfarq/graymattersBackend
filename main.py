@@ -7,7 +7,7 @@ from database import SessionLocal, engine
 from schemas import LoginInfo
 
 from sqlalchemy.orm import Session
-
+from starlette.middleware.sessions import SessionMiddleware
 from fastapi.middleware.cors import CORSMiddleware
 
 models.Base.metadata.create_all(bind=engine)
@@ -24,6 +24,8 @@ app.add_middleware(
     allow_methods=["*"],
     allow_headers=["*"],
 )
+
+app.add_middleware(SessionMiddleware, secret_key="!secret")
 
 
 def get_db():
@@ -94,7 +96,7 @@ async def add_book(request: Request, db: Session = Depends(get_db), user: str = 
     db.add(new_book)
     db.commit()
     db.refresh(new_book)
-    
+
     return {"message": "Book added"}
 
 @app.get("/library/{book_id}")
