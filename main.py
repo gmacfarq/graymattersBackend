@@ -53,7 +53,7 @@ def home():
 def register(request: Request, user_data: LoginInfo, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == user_data.username).first()
     if user is not None:
-        return {"message": "User already exists"}
+        raise HTTPException(status_code=404, detail="User alrady exists")
     new_user = User(username=user_data.username)
     new_user.set_password(user_data.password)
 
