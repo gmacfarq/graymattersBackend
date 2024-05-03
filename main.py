@@ -70,9 +70,9 @@ def register(request: Request, user_data: LoginInfo, db: Session = Depends(get_d
 def login(request: Request, user_data: LoginInfo, db: Session = Depends(get_db)):
     user = db.query(User).filter(User.username == user_data.username).first()
     if user is None:
-        return {"message": "User not found"}
+        raise HTTPException(status_code=404, detail="User not found")
     if not user.check_password(user_data.password):
-        return {"message": "Incorrect password"}
+        raise HTTPException(status_code=401, detail="Incorrect password")
 
     request.session['username'] = user.username
     request.session['is_admin'] = user.is_admin
